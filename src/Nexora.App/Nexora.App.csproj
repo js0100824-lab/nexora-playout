@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>NexoraPlayout</AssemblyName>
+    <RootNamespace>Nexora.UI</RootNamespace>
+    <Version>0.1.0</Version>
+    <Product>NEXORA PLAYOUT</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nexora.Core\Nexora.Core.csproj" />
+    <ProjectReference Include="..\Nexora.Library\Nexora.Library.csproj" />
+    <ProjectReference Include="..\Nexora.Storage\Nexora.Storage.csproj" />
+  </ItemGroup>
+
+</Project>

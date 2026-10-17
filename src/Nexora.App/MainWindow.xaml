@@ -1,0 +1,172 @@
+<Window x:Class="Nexora.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="NEXORA PLAYOUT" Width="1280" Height="780" MinWidth="980" MinHeight="620"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BgBrush}"
+        AllowDrop="True" PreviewDragOver="Window_PreviewDragOver" Drop="Window_Drop">
+
+    <Window.Resources>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource PanelBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" MinHeight="180" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="3*" MinHeight="180" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Temporizadores -->
+        <Grid Grid.Row="0" Margin="0,0,0,6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="1.2*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="TIEMPO DE EMISIÓN" Style="{StaticResource TimerCaption}" />
+                    <TextBlock Text="00:00:00" Style="{StaticResource TimerValue}" />
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="1" Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="CONTENIDO ACTUAL" Style="{StaticResource TimerCaption}" />
+                    <TextBlock Text="--:--:--" Style="{StaticResource TimerValue}" />
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="2" Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="PRÓXIMO CORTE PUBLICITARIO" Style="{StaticResource TimerCaption}" />
+                    <TextBlock Text="--:--:--" Style="{StaticResource TimerValue}" />
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="3" Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="RESTANTE DEL BLOQUE" Style="{StaticResource TimerCaption}" />
+                    <TextBlock Text="--:--:--" Style="{StaticResource TimerValue}" />
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="4" Style="{StaticResource Card}" Margin="0">
+                <StackPanel>
+                    <TextBlock x:Name="DateText" Style="{StaticResource TimerCaption}" />
+                    <TextBlock x:Name="ClockText" Style="{StaticResource TimerValue}"
+                               Foreground="{StaticResource ClockBrush}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Monitores -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Style="{StaticResource Card}">
+                <DockPanel>
+                    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,6">
+                        <Border Background="{StaticResource AirBrush}" CornerRadius="2" Padding="8,2">
+                            <TextBlock Text="PROGRAM · AL AIRE" FontWeight="Bold" FontSize="12" Foreground="White" />
+                        </Border>
+                        <TextBlock Text="Programa" HorizontalAlignment="Right" Foreground="{StaticResource MutedBrush}" />
+                    </DockPanel>
+                    <TextBlock DockPanel.Dock="Bottom" Margin="0,6,0,0" Text="Sin contenido al aire"
+                               Foreground="{StaticResource MutedBrush}" />
+                    <Border Background="Black" BorderBrush="{StaticResource AirBrush}" BorderThickness="1">
+                        <TextBlock Text="SIN SEÑAL" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="20" Foreground="#555B66" />
+                    </Border>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource Card}" Margin="0">
+                <DockPanel>
+                    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,6">
+                        <Border Background="{StaticResource AccentBrush}" CornerRadius="2" Padding="8,2">
+                            <TextBlock Text="PREVIEW · SIGUIENTE" FontWeight="Bold" FontSize="12" Foreground="White" />
+                        </Border>
+                    </DockPanel>
+                    <TextBlock DockPanel.Dock="Bottom" Margin="0,6,0,0" Text="Sin contenido seleccionado"
+                               Foreground="{StaticResource MutedBrush}" />
+                    <Border Background="Black" BorderBrush="{StaticResource AccentBrush}" BorderThickness="1">
+                        <TextBlock Text="SIN SEÑAL" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="20" Foreground="#555B66" />
+                    </Border>
+                </DockPanel>
+            </Border>
+        </Grid>
+
+        <!-- Controles de emisión (se activan con el motor, Etapa 3) -->
+        <Border Grid.Row="2" Style="{StaticResource Card}" Margin="0,6">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <TextBlock Text="VOLUMEN" Style="{StaticResource TimerCaption}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <Slider Width="160" Minimum="0" Maximum="100" Value="80" VerticalAlignment="Center"
+                            IsEnabled="False" ToolTip="Disponible cuando se implemente el motor (Etapa 3)" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Iniciar" IsEnabled="False" ToolTip="Disponible en la Etapa 3" />
+                    <Button Content="Pausar" IsEnabled="False" ToolTip="Disponible en la Etapa 3" />
+                    <Button Content="Reanudar" IsEnabled="False" ToolTip="Disponible en la Etapa 3" />
+                    <Button Content="Detener" IsEnabled="False" ToolTip="Disponible en la Etapa 3" />
+                    <Button Content="Siguiente" IsEnabled="False" ToolTip="Disponible en la Etapa 3" />
+                    <Button Content="Reproducir seleccionado" IsEnabled="False" ToolTip="Disponible en la Etapa 3" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Biblioteca / lista de reproducción -->
+        <Border Grid.Row="3" Style="{StaticResource Card}" Margin="0" Padding="8">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+                    <Button Content="Añadir carpeta…" Click="AddFolder_Click" />
+                    <Button Content="Añadir archivos…" Click="AddFiles_Click" />
+                    <Button Content="Quitar de la lista" Click="Remove_Click" />
+                    <Button Content="▲ Subir" Click="MoveUp_Click" />
+                    <Button Content="▼ Bajar" Click="MoveDown_Click" />
+                    <Button Content="Verificar archivos" Click="Verify_Click" />
+                    <TextBlock Text="También puedes arrastrar carpetas o vídeos a esta ventana."
+                               Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center" Margin="8,0,0,0" />
+                </StackPanel>
+
+                <DataGrid x:Name="PlaylistGrid" AllowDrop="True">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                    <Setter Property="Foreground" Value="#E26D6D" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Nombre" Binding="{Binding Name}" Width="2*" />
+                        <DataGridTextColumn Header="Duración" Binding="{Binding DurationText}" Width="100" />
+                        <DataGridTextColumn Header="Estado" Binding="{Binding StatusText}" Width="110" />
+                        <DataGridTextColumn Header="Ubicación" Binding="{Binding Path}" Width="3*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <!-- Barra de estado -->
+        <DockPanel Grid.Row="4" Margin="2,6,2,0">
+            <TextBlock x:Name="ProbeText" DockPanel.Dock="Right" Foreground="{StaticResource MutedBrush}" />
+            <TextBlock x:Name="StatusText" Foreground="{StaticResource MutedBrush}" />
+        </DockPanel>
+    </Grid>
+</Window>
