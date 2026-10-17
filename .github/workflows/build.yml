@@ -1,0 +1,59 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Instalar .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restaurar dependencias
+        run: dotnet restore src/Nexora.App/Nexora.App.csproj
+
+      - name: Compilar
+        run: dotnet build src/Nexora.App/Nexora.App.csproj -c Release --no-restore
+
+      - name: Publicar ejecutable portable (win-x64)
+        run: >
+          dotnet publish src/Nexora.App/Nexora.App.csproj -c Release -r win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -o publish
+
+      - name: Comprobar que se generó el .exe
+        shell: pwsh
+        run: |
+          if (-not (Test-Path publish/NexoraPlayout.exe)) { throw "No se generó NexoraPlayout.exe" }
+          Get-Item publish/NexoraPlayout.exe | Select-Object Name, Length
+
+      - name: Empaquetar
+        shell: pwsh
+        run: Compress-Archive -Path publish/NexoraPlayout.exe, README.md -DestinationPath NexoraPlayout-win-x64.zip
+
+      - name: Subir artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: NexoraPlayout-win-x64
+          path: NexoraPlayout-win-x64.zip
+
+      - name: Publicar en GitHub Releases (solo con etiquetas v*)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: NexoraPlayout-win-x64.zip
